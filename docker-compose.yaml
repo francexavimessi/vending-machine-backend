@@ -1,0 +1,13 @@
+services:
+  web:
+    command: npm run dev
+    container_name: next-docker-development
+    build:  # Specify the build context
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3080:3080"  # Map the app port to a host port
