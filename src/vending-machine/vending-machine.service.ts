@@ -29,6 +29,9 @@ export class VendingMachineService {
     const productDetails = await this.productModel.find({
       _id: { $in: productIds },
     });
+    console.log('totalPaid', totalPaid);
+    console.log('denominations', denominations);
+    console.log('products', products[0].quantity);
 
     // Validate products and calculate total cost
     let totalCost = 0;
@@ -96,7 +99,7 @@ export class VendingMachineService {
     } as PurchaseResponseDto;
   }
 
-  private async calculateChange(
+  async calculateChange(
     amount: number,
   ): Promise<{ denomination: number; quantity: number }[] | null> {
     const inventory = await this.inventoryModel
@@ -116,7 +119,7 @@ export class VendingMachineService {
     return amount === 0 ? change : null;
   }
 
-  private async updateInventoryForChange(
+  async updateInventoryForChange(
     change: { denomination: number; quantity: number }[],
   ): Promise<void> {
     for (const item of change) {
@@ -127,7 +130,7 @@ export class VendingMachineService {
     }
   }
 
-  private async increaseInventoryForDenominations(
+  async increaseInventoryForDenominations(
     denominations: { value: number; count: number }[],
   ): Promise<void> {
     for (const item of denominations) {

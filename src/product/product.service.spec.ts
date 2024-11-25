@@ -1,11 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from './product.service';
-import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { connect, Connection, Model, Types } from 'mongoose';
+import { connect, Connection, Model, Types } from 'mongoose'; 
 import { getModelToken } from '@nestjs/mongoose';
-import { Product, ProductSchema } from '@schemas/product.schema';
-// import { Product, ProductSchema } from './dto/Product';
+import { Product, ProductSchema } from './../schemas/product.schema';
 
 describe('ProductService', () => {
   let service: ProductService;
@@ -13,33 +11,29 @@ describe('ProductService', () => {
   let mongoConnection: Connection;
   let productModel: Model<Product>;
 
-  beforeEach(async () => {
-    // Start MongoDB in memory
+  // Before the tests, connect to the in-memory database
+  beforeAll(async () => {
+    // Start MongoDB in memory once
     mongod = await MongoMemoryServer.create();
     const uri = mongod.getUri();
 
     mongoConnection = (await connect(uri)).connection;
     productModel = mongoConnection.model(Product.name, ProductSchema);
+  });
 
+  beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductService,
         { provide: getModelToken(Product.name), useValue: productModel },
-        { provide: getModelToken(Product.name), useValue: Product },
       ],
     }).compile();
 
     service = module.get<ProductService>(ProductService);
   });
 
-  afterAll(async () => {
-    await mongoConnection.dropDatabase();
-    await mongoConnection.close();
-    await mongod.stop();
-  });
-
   afterEach(async () => {
-    // Clear data after each test
+    // Clear data between tests
     await productModel.deleteMany({});
   });
 
@@ -73,9 +67,14 @@ describe('ProductService', () => {
         stock: 10,
         kind: 'snack',
       });
-
+      await productModel.create({
+        name: 'Test Product',
+        price: 100,
+        stock: 10,
+        kind: 'snack',
+      });
       const products = await service.findAll();
-      expect(products.length).toBe(1);
+      expect(products.length).toBe(2);
       expect(products[0].name).toBe('Test Product');
     });
   });
@@ -92,6 +91,9 @@ describe('ProductService', () => {
 
       const foundProduct = await service.findOne(product._id.toString());
       expect(foundProduct.name).toBe('Test Product');
+      expect(foundProduct.price).toBe(100);
+      expect(foundProduct.stock).toBe(10);
+      expect(foundProduct.kind).toBe('snack');
     });
 
     it('should throw NotFoundException if product is not found', async () => {

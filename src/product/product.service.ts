@@ -4,7 +4,8 @@ import { Model } from 'mongoose';
 // import { Product } from './schemas/product.schema';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from '@schemas/product.schema';
+import { Product } from './../schemas/product.schema';
+
 
 @Injectable()
 export class ProductService {

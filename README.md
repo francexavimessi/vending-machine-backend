@@ -1,6 +1,37 @@
-## Description
+# NestJS REST API with Swagger Documentation
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a simple **NestJS** project for a **REST API** that provides basic product and inventory management features, with a **Swagger** documentation interface for easy exploration of the available endpoints.
+
+## Project Overview
+
+This project is designed to provide the following functionalities:
+
+- Create, read, update, and delete products (CRUD operations).
+- Track inventory of items using denominations (coins and banknotes).
+- Purchase products using virtual transactions, with change calculations based on available inventory.
+
+## Features
+
+- **REST API** for product and inventory management.
+- **Swagger Documentation** for API exploration and testing.
+- **In-memory MongoDB** using **MongoMemoryServer** for testing purposes.
+- **File upload handling** with dynamic path generation.
+
+## Tech Stack
+
+- **NestJS**: A progressive Node.js framework for building efficient and scalable server-side applications.
+- **MongoDB**: A NoSQL database for storing product and transaction data.
+- **Swagger**: A framework for API documentation, integrated into NestJS for automatic generation of API docs.
+- **Jest**: A testing framework for writing unit and integration tests.
+
+## Installation
+
+### Prerequisites
+
+- **Node.js** (>= 14.0.0)
+- **MongoDB** (local or in-memory, using `mongodb-memory-server` for tests)
+
+### Step-by-Step Installation
 
 ## Project setup
 
@@ -10,16 +41,12 @@ $ npm install
 
 ## Compile and run the project
 
-```bash
-# development
-$ npm run start
-
+````bash
 # watch mode
 $ npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
+# !!!you can't connect data base url connect database null
+
 
 ## Run tests
 
@@ -27,53 +54,16 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
+````
 
 ## Run Docker comand
 
 ```bash
 $ docker-compose up --build
+```
+
+## URL for API Document
+
+```bash
+$ http://localhost:3080/api-docs#/
 ```
