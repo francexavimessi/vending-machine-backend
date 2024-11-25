@@ -8,10 +8,11 @@ export class ImagesService {
     __dirname,
     '..',
     '..',
+    '..',
+
     'public',
     'uploads',
   );
-
   constructor() {
     if (!existsSync(this.uploadPath)) {
       mkdirSync(this.uploadPath, { recursive: true });
@@ -19,6 +20,8 @@ export class ImagesService {
   }
 
   getFilePath(fileName: string): string {
+    // console.log(uploadPath);
+
     return join(this.uploadPath, fileName);
   }
 }

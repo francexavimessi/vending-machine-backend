@@ -22,6 +22,7 @@ export class VendingMachineService {
   async purchaseProducts(
     products: { productId: string; quantity: number }[],
     totalPaid: number,
+    denominations: { value: number; count: number }[], // Add denominations parameter
   ) {
     // Fetch product details
     const productIds = products.map((item) => item.productId);
@@ -51,13 +52,10 @@ export class VendingMachineService {
 
     // Check if sufficient funds are provided
     if (totalPaid < totalCost) {
-      throw new Error('Insufficient funds.' );
+      throw new Error('Insufficient funds.');
     }
 
     // Calculate change
-    console.log('totalPaid', totalPaid);
-    console.log('totalCost', totalCost);
-
     const changeNeeded = totalPaid - totalCost;
     const change = await this.calculateChange(changeNeeded);
     if (!change) {
@@ -74,6 +72,9 @@ export class VendingMachineService {
 
     // Update inventory for change
     await this.updateInventoryForChange(change);
+
+    // Update inventory for received denominations
+    await this.increaseInventoryForDenominations(denominations);
 
     // Record transaction
     const transaction = new this.transactionModel({
@@ -102,7 +103,6 @@ export class VendingMachineService {
       .find({ quantity: { $gt: 0 } })
       .sort({ denomination: -1 });
     const change = [];
-    console.log('inventory', inventory);
 
     for (const item of inventory) {
       const needed = Math.floor(amount / item.denomination);
@@ -123,6 +123,18 @@ export class VendingMachineService {
       await this.inventoryModel.updateOne(
         { denomination: item.denomination },
         { $inc: { quantity: -item.quantity } },
+      );
+    }
+  }
+
+  private async increaseInventoryForDenominations(
+    denominations: { value: number; count: number }[],
+  ): Promise<void> {
+    for (const item of denominations) {
+      await this.inventoryModel.updateOne(
+        { denomination: item.value },
+        { $inc: { quantity: item.count } },
+        { upsert: true }, // Create the entry if it doesn't exist
       );
     }
   }

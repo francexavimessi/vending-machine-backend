@@ -16,8 +16,14 @@ COPY . .
 # Build the NestJS application
 RUN npm run build
 
+# COPY --from=builder /src/public ./public
 # Expose the port the app runs on
 EXPOSE 3080
 
 # Start the application
+
+# CMD ["npm", "run", "build"]
+
 CMD ["npm", "run", "start"]
+
+

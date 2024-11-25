@@ -18,6 +18,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "typeRoots": ["./node_modules/@types", "./src *"],
-    // "copy-static": "cp -R public app/dist/public"
+    "paths": {
+      "@schemas/*": ["./schemas/*"]
+    }
   }
 }

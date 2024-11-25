@@ -12,6 +12,7 @@ import { diskStorage } from 'multer';
 import { ImagesService } from './images.service';
 import { Response } from 'express';
 import { join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 
 @Controller('images')
 export class ImagesController {
@@ -42,7 +43,19 @@ export class ImagesController {
 
   @Get(':fileName')
   getFile(@Param('fileName') fileName: string, @Res() res: Response) {
-    const filePath = this.imagesService.getFilePath(fileName);
-    return res.sendFile(filePath); // Send file to client
+    try {
+      const filePath = this.imagesService.getFilePath(fileName);
+
+      // Check if the file exists
+      if (existsSync(filePath)) {
+        return res.sendFile(filePath); // Send file to client
+      } else {
+        const defaultFilePath = this.imagesService.getFilePath('fruit-2.jpeg');
+        return res.sendFile(defaultFilePath); // Send default file if the requested file doesn't exist
+      }
+    } catch (error) {
+      const defaultFilePath = this.imagesService.getFilePath('fruit-2.jpeg');
+      return res.sendFile(defaultFilePath); // Handle errors and send default file
+    }
   }
 }

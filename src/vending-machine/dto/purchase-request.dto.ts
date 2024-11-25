@@ -1,7 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, ValidateNested, IsNumber, IsPositive } from 'class-validator';
+import {
+  IsArray,
+  ValidateNested,
+  IsNumber,
+  IsPositive,
+  IsNotEmpty,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ProductDto } from './product.dto';
+
+export class DenominationDto {
+  @ApiProperty({
+    example: 50,
+    description: 'Value of the denomination (e.g., 50, 100, etc.)',
+  })
+  @IsNumber()
+  @IsPositive()
+  value: number;
+
+  @ApiProperty({
+    example: 2,
+    description: 'Number of such denominations provided',
+  })
+  @IsNumber()
+  @IsPositive()
+  count: number;
+}
 
 export class PurchaseRequestDto {
   @ApiProperty({
@@ -18,6 +42,15 @@ export class PurchaseRequestDto {
     description: 'Total money paid by the customer',
   })
   @IsNumber()
-  // @IsPositive()
+  @IsPositive()
   totalPaid: number;
+
+  @ApiProperty({
+    type: [DenominationDto],
+    description: 'List of denominations used for payment',
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => DenominationDto) // Enable transformation for nested DTOs
+  denominations: DenominationDto[];
 }

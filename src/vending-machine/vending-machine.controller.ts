@@ -10,7 +10,7 @@ import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { VendingMachineService } from './vending-machine.service';
 import { PurchaseRequestDto } from './dto/purchase-request.dto';
 import { PurchaseResponseDto } from './dto/purchase-response.dto';
-
+import { ProductResponseDto } from 'src/product/dto/response-product.dto';
 @ApiTags('Vending Machine')
 @Controller('vending-machine')
 export class VendingMachineController {
@@ -21,6 +21,7 @@ export class VendingMachineController {
     status: 200,
     description: 'Fetch all available products',
     isArray: true,
+    type: ProductResponseDto,
   })
   async getProducts() {
     return this.vendingMachineService.getProducts();
@@ -44,12 +45,13 @@ export class VendingMachineController {
   async purchaseProducts(
     @Body() purchaseRequest: PurchaseRequestDto,
   ): Promise<PurchaseResponseDto> {
-    const { products, totalPaid } = purchaseRequest;
+    const { products, totalPaid, denominations } = purchaseRequest;
 
     try {
       return await this.vendingMachineService.purchaseProducts(
         products,
         totalPaid,
+        denominations,
       );
     } catch (error) {
       // Handle known error types

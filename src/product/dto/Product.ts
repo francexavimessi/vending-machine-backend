@@ -6,20 +6,16 @@ export class Product extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true, min: 0 })
+  @Prop({ required: true })
   price: number;
 
-  @Prop({ required: true, min: 0 })
+  @Prop({ required: true })
   stock: number;
 
-  // Add img as a string for the image path
-  @Prop({ required: false })
-  img: string;
-
-  // Add kind as a string for the type/category of the product
-  @Prop({ required: true, enum: ['snack', 'drink'] })
+  @Prop({ required: true })
   kind: string;
 
+  // Define _id explicitly
   _id: Types.ObjectId;
 }
 

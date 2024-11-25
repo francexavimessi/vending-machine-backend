@@ -11,6 +11,7 @@ import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductResponseDto } from './dto/response-product.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -19,19 +20,32 @@ export class ProductController {
 
   @Post()
   @ApiBody({ type: CreateProductDto })
-  @ApiResponse({ status: 201, description: 'Product successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Product successfully created.',
+    type: ProductResponseDto,
+  })
   async create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
   }
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Get all products.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Get all products.',
+    isArray: true,
+    type: ProductResponseDto,
+  })
   async findAll() {
     return this.productService.findAll();
   }
 
   @Get(':id')
-  @ApiResponse({ status: 200, description: 'Get a specific product by ID.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Get a specific product by ID.',
+    type: ProductResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Product not found.' })
   async findOne(@Param('id') id: string) {
     return this.productService.findOne(id);
@@ -39,7 +53,11 @@ export class ProductController {
 
   @Put(':id')
   @ApiBody({ type: UpdateProductDto })
-  @ApiResponse({ status: 200, description: 'Product successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product successfully updated.',
+    type: ProductResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Product not found.' })
   async update(
     @Param('id') id: string,

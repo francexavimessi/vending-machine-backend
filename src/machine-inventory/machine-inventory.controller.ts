@@ -11,6 +11,7 @@ import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { MachineInventoryService } from './machine-inventory.service';
 import { CreateInventoryDto } from './dto/create-inventory.dto';
 import { UpdateInventoryDto } from './dto/update-inventory.dto';
+import { InventoryResponseDto } from './dto/reponse-inventory.dto';
 
 @ApiTags('Machine Inventory')
 @Controller('inventory')
@@ -19,13 +20,22 @@ export class MachineInventoryController {
 
   @Post()
   @ApiBody({ type: CreateInventoryDto })
-  @ApiResponse({ status: 201, description: 'Inventory successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Inventory successfully created.',
+    type: InventoryResponseDto,
+  })
   async create(@Body() createInventoryDto: CreateInventoryDto) {
     return this.inventoryService.create(createInventoryDto);
   }
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Get all inventory items.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Get all inventory items.',
+    isArray: true,
+    type: InventoryResponseDto,
+  })
   async findAll() {
     return this.inventoryService.findAll();
   }
@@ -34,6 +44,7 @@ export class MachineInventoryController {
   @ApiResponse({
     status: 200,
     description: 'Get a specific inventory item by ID.',
+    type: InventoryResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Inventory item not found.' })
   async findOne(@Param('id') id: string) {
@@ -45,6 +56,7 @@ export class MachineInventoryController {
   @ApiResponse({
     status: 200,
     description: 'Inventory item successfully updated.',
+    type: InventoryResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Inventory item not found.' })
   async update(
