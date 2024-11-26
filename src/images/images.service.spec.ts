@@ -37,9 +37,17 @@ describe('ImagesService', () => {
     it('should return the correct file path', () => {
       const fileName = 'test-image.jpg';
       const filePath = service.getFilePath(fileName);
-
       expect(filePath).toBe(
-        join(__dirname, '..', '..', '..', 'public', 'uploads', fileName),
+        join(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          'dist',
+          'public',
+          'uploads',
+          fileName,
+        ),
       );
     });
   });

@@ -19,8 +19,9 @@ export class CreateProductDto {
 
   @ApiProperty({ example: 100, description: 'Stock of the product' })
   @IsNumber()
-  @IsPositive()
+  // @IsPositive()
   stock: number;
+
 
   @ApiProperty({
     example: 'drink',

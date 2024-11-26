@@ -22,8 +22,37 @@ export class MachineInventoryService {
   }
 
   // Get all inventory items
-  async findAll(): Promise<MachineInventory[]> {
-    return this.inventoryModel.find().exec();
+  async findAllWithPagination(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+    items: MachineInventory[];
+  }> {
+    const skip = (page - 1) * limit;
+
+    // Fetch total number of items
+    const totalItems = await this.inventoryModel.countDocuments().exec();
+
+    // Fetch paginated items
+    const items = await this.inventoryModel
+      .find()
+      .sort({ denomination: 1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+      totalItems,
+      totalPages,
+      currentPage: page,
+      items,
+    };
   }
 
   // Get an inventory item by ID

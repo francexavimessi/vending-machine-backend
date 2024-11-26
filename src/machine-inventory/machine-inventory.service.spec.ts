@@ -25,14 +25,20 @@ describe('InventoryService', () => {
     console.log(uri);
 
     mongoConnection = (await connect(uri)).connection;
-    inventoryModel = mongoConnection.model(MachineInventory.name, MachineInventorySchema);
+    inventoryModel = mongoConnection.model(
+      MachineInventory.name,
+      MachineInventorySchema,
+    );
   });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MachineInventoryService,
-        { provide: getModelToken(MachineInventory.name), useValue: inventoryModel },
+        {
+          provide: getModelToken(MachineInventory.name),
+          useValue: inventoryModel,
+        },
       ],
     }).compile();
 
@@ -87,10 +93,10 @@ describe('InventoryService', () => {
         type: 'banknote',
       });
 
-      const inventoryItems = await service.findAll();
-      expect(inventoryItems.length).toBe(2);
-      expect(inventoryItems[0].denomination).toBe(1000);
-      expect(inventoryItems[1].type).toBe('banknote');
+      const inventoryItems = await service.findAllWithPagination(1, 10);
+      expect(inventoryItems.items.length).toBe(2);
+      expect(inventoryItems.items[0].denomination).toBe(500);
+      expect(inventoryItems.items[1].type).toBe('coin');
     });
   });
 

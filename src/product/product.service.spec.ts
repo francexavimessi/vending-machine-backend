@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from './product.service';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { connect, Connection, Model, Types } from 'mongoose'; 
+import { connect, Connection, Model, Types } from 'mongoose';
 import { getModelToken } from '@nestjs/mongoose';
 import { Product, ProductSchema } from './../schemas/product.schema';
 
@@ -73,9 +73,9 @@ describe('ProductService', () => {
         stock: 10,
         kind: 'snack',
       });
-      const products = await service.findAll();
-      expect(products.length).toBe(2);
-      expect(products[0].name).toBe('Test Product');
+      const products = await service.findAll(1, 10);
+      expect(products.items.length).toBe(2);
+      expect(products.items[0].name).toBe('Test Product');
     });
   });
 

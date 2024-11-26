@@ -6,12 +6,14 @@ import {
   Delete,
   Param,
   Body,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductResponseDto } from './dto/response-product.dto';
+import { Product } from 'src/schemas/product.schema';
 
 @ApiTags('Products')
 @Controller('products')
@@ -32,12 +34,35 @@ export class ProductController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: 'Get all products.',
-    isArray: true,
-    type: ProductResponseDto,
+    description: 'Get paginated and sorted products.',
+    schema: {
+      example: {
+        totalItems: 50,
+        totalPages: 5,
+        currentPage: 1,
+        items: [
+          {
+            _id: '6744dfc43b25965395bf838b',
+            name: 'Product Name',
+            price: 100,
+            stock: 50,
+          },
+        ],
+      },
+    },
   })
-  async findAll() {
-    return this.productService.findAll();
+  async findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('sort') sort: string = 'name',
+    @Query('order') order: 'asc' | 'desc' = 'asc',
+  ): Promise<{
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+    items: Product[];
+  }> {
+    return this.productService.findAll(page, limit, sort, order);
   }
 
   @Get(':id')

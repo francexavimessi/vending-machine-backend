@@ -37,7 +37,7 @@ export class ImagesController {
     return {
       message: 'File uploaded successfully',
       filename: file.filename,
-      path: `/images/${file.filename}`,
+      path: `${file.filename}`,
     };
   }
 
@@ -45,6 +45,7 @@ export class ImagesController {
   getFile(@Param('fileName') fileName: string, @Res() res: Response) {
     try {
       const filePath = this.imagesService.getFilePath(fileName);
+      console.log(filePath);
 
       // Check if the file exists
       if (existsSync(filePath)) {

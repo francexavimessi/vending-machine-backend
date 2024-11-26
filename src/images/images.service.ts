@@ -9,7 +9,7 @@ export class ImagesService {
     '..',
     '..',
     '..',
-
+    'dist',
     'public',
     'uploads',
   );

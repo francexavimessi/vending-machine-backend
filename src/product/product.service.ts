@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './../schemas/product.schema';
-
+import { SortOrder } from 'mongoose'; // Import SortOrder type for clarity
 
 @Injectable()
 export class ProductService {
@@ -20,8 +20,44 @@ export class ProductService {
   }
 
   // Get all products
-  async findAll(): Promise<Product[]> {
-    return this.productModel.find().exec();
+
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+    sort: string = 'name', // Default sort field
+    order: 'asc' | 'desc' = 'asc', // Default sort order
+  ): Promise<{
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+    items: Product[];
+  }> {
+    const skip = (page - 1) * limit;
+
+    // Fetch total number of items
+    const totalItems = await this.productModel.countDocuments().exec();
+
+    // Build sort object
+    const sortOrder: SortOrder = order === 'asc' ? 1 : -1; // Explicitly typed
+    const sortObject: { [key: string]: SortOrder } = { [sort]: sortOrder };
+
+    // Fetch paginated and sorted items
+    const items = await this.productModel
+      .find()
+      .sort(sortObject) // Pass the correctly typed sort object
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+      totalItems,
+      totalPages,
+      currentPage: page,
+      items,
+    };
   }
 
   // Get a product by ID
